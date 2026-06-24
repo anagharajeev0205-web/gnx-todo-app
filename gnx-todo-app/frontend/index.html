@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GNX Todo App</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 60px auto; padding: 0 20px; }
+    h1 { color: #333; }
+    input { width: 70%; padding: 8px; font-size: 14px; }
+    button { padding: 8px 16px; font-size: 14px; cursor: pointer; }
+    ul { list-style: none; padding: 0; margin-top: 20px; }
+    li { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+    .delete-btn { color: red; cursor: pointer; border: none; background: none; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>📝 GNX Todo App</h1>
+  <input type="text" id="todoInput" placeholder="Enter a todo..." />
+  <button onclick="addTodo()">Add</button>
+  <ul id="todoList"></ul>
+
+  <script>
+    const API = 'http://localhost:3000';
+
+    async function loadTodos() {
+      const res = await fetch(`${API}/todos`);
+      const todos = await res.json();
+      const list = document.getElementById('todoList');
+      list.innerHTML = '';
+      todos.forEach(todo => {
+        const li = document.createElement('li');
+        li.innerHTML = `${todo.title} <button class="delete-btn" onclick="deleteTodo(${todo.id})">✕</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    async function addTodo() {
+      const input = document.getElementById('todoInput');
+      const title = input.value.trim();
+      if (!title) return;
+      await fetch(`${API}/todos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title })
+      });
+      input.value = '';
+      loadTodos();
+    }
+
+    async function deleteTodo(id) {
+      await fetch(`${API}/todos/${id}`, { method: 'DELETE' });
+      loadTodos();
+    }
+
+    document.getElementById('todoInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') addTodo();
+    });
+
+    loadTodos();
+  </script>
+</body>
+</html>
