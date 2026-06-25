@@ -6,7 +6,6 @@ on:
       - Main
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
 
@@ -63,10 +62,21 @@ jobs:
       - name: Set SHA
         run: echo "SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Install GKE Auth Plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin --quiet
+
       - name: Configure kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+
+      - name: Verify Cluster Access
+        run: |
+          kubectl get nodes
 
       - name: Update Images
         run: |
