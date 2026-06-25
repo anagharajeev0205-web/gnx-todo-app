@@ -11,9 +11,12 @@
 
 **Answer:**
 
-_(Write your answer here)_
+Check the Pod status using the command
+kubectl get pods
+Check for the pod named "gnx-backend" and whether it's status is CrashLoopBackOff, Number of restarts and the fequency of restarts
 
----
+Inspect the event, exit codes and termination reasons of the pod using the command
+kubectl describe pod gnx-backend 
 
 ## Q2. Frontend Cannot Reach Backend
 
