@@ -46,6 +46,7 @@ Browser → Frontend (Nginx :80) → /api/* → Backend (Node.js :3000) → Post
 docker compose up --build
 ```
 echo "Pipeline test"
+echo "Pipeline new"
 Open http://localhost:8080 — you should see the Todo app.
 
 ---
